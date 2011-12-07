@@ -10,9 +10,10 @@ Gem::Specification.new do |s|
   s.authors     = ["Lars Kuhnt"]
   s.email       = ["lars.kuhnt@gmail.com"]
   s.homepage    = "http://github.com/larskuhnt/track"
-  s.summary     = "Nano framework to build small server applications based on rack"
-  s.description = "Nano framework to build small server applications based on rack"
- 
+  s.summary     = "Nano framework to build small server applications based on rack and ruby 1.9"
+  s.description = "Nano framework to build small server applications based on rack and ruby 1.9"
+  
+  s.required_ruby_version = ">= 1.9"
   s.required_rubygems_version = ">= 1.3.6"
   
   s.add_dependency 'rack'
