@@ -1,7 +1,7 @@
 # encoding: utf-8
 require 'spec_helper'
 
-class TestApp < Track::Application
+class TestApp < Track::Controller
   
   route '/',         :index, :get
   route '/show/:id', :show,  :get
@@ -9,33 +9,49 @@ class TestApp < Track::Application
   route '/all',      :index
   route '/boom',     :boom
   
-  before :show, :set_action_param
-  before :boom, :set_error_code_by_param
+  pre :set_test_param, [:index, :show, :boom]
+  pre :set_show_action_param, :show
+  pre :set_error_code_by_param, :boom
   
   def index
-    [200, { 'Content-Type' => 'text/plain' }, ['index']]
+    build_response 'index'
   end
   
   def show
-    [200, { 'Content-Type' => 'text/plain' }, ['show']]
+    build_response 'show'
   end
   
   def boom
-    [200, { 'Content-Type' => 'text/plain' }, ['boom']]
+    build_response 'boom'
+  end
+  
+  private
+  
+  def routing_error
+    [404, { 'Content-Type' => 'text/plain' }, ['route missing']]
   end
   
   def set_error_code_by_param
-    params['error_code'] ? [params['error_code'].to_i, { 'Content-Type' => 'text/plain' }, ['error']] : nil
+    unless params['error_code'].nil?
+      fail build_response('error', params['error_code'].to_i)
+    end
   end
   
-  def set_action_param
-    params[:action] = :show
-    nil
+  def set_show_action_param
+    params['action'] = 'show'
+  end
+  
+  def set_test_param
+    params['test'] = 'test'
+  end
+  
+  def build_response(text, status = 200)
+    [status, { 'Content-Type' => 'text/plain' }, StringIO.new(text)]
   end
   
 end
 
-describe  Track::Application do
+describe  Track::Controller do
   include Rack::Test::Methods
   
   def app
@@ -52,6 +68,12 @@ describe  Track::Application do
     it "should return 404 for a post request" do
       post '/'
       last_response.status.should == 404
+      last_response.body.should == 'route missing'
+    end
+    
+    it "should call set_test_param" do
+      app.should_receive(:set_test_param).once
+      get '/'
     end
     
   end
@@ -138,12 +160,17 @@ describe  Track::Application do
       last_response.status.should == 200
     end
     
+    it "should return 200 for a DELETE request" do
+      delete '/all'
+      last_response.status.should == 200
+    end
+    
   end
   
   
   context '/boom' do
     
-    it "should return 200 and valid json if no error code is given" do
+    it "should return 200 if no error code is given" do
       get '/boom'
       last_response.status.should == 200
       last_response.body.should == 'boom'

@@ -1,8 +1,6 @@
-module Track
-  VERSION = '0.0.2'
-end
-
 require 'rack'
-require 'track/application'
-require 'track/config'
+require 'track/controller'
 
+module Track
+  VERSION = '0.1.0'  
+end

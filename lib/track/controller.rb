@@ -3,18 +3,17 @@ require_relative 'route_map'
 require_relative 'filter_map'
 
 module Track
-  class Application
-  
+  class Controller
+    
     @@route_map  = RouteMap.new
     @@filter_map = FilterMap.new
-  
+    
     attr_accessor :params
-  
-    def initialize(routing_error_response = [404, { 'Content-Type' => 'text/plain' }, ['route not found']])
-      @routing_error_response = routing_error_response
+    
+    def initialize
       @params = {}
     end
-  
+    
     def call(env)
       req = Rack::Request.new(env)
       @params.merge!(req.params)
@@ -22,28 +21,36 @@ module Track
         @params.merge!(route[:matches])
         response_for(route)
       else
-        @routing_error_response
+        routing_error
       end
     end
-  
+    
     protected
-  
+    
+    def routing_error
+      [404, { 'Content-Type' => 'text/plain' }, ['route not found']]
+    end
+    
     def response_for(route)
       if filters = @@filter_map.scan(self.class.name, route[:action])
         filters.each do |m|
-          response = send(m)
-          return response if response
+          send(m)
+          return @_response if @_response
         end
       end
       send(route[:action])
     end
-  
+    
+    def fail(response = [404, { 'Content-Type' => 'text/plain' }, ['']])
+      @_response = response
+    end
+    
     def self.route(pattern, action, methods = nil)
       @@route_map.add self.name, pattern, action, methods
     end
-  
-    def self.before(action, method)
-      @@filter_map.add self.name, action, method
+    
+    def self.pre(method, actions)
+      @@filter_map.add self.name, method, actions
     end
   
   end
