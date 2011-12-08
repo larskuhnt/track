@@ -7,11 +7,11 @@ A nano framework for server applications based on rack and ruby 1.9 named captur
 - modularize your rack app through controllers
 - routes paths to methods inside of your controllers via the `route` method
 - define before filters via the `pre` method
+- ActiveRecord initializer through `require 'track/orm/active_record'`
 
 ## What Track does *not*
 
 - support any template engines, your actions have to return low level rack responses
-- support any ORM framework
 
 ## Install
 
