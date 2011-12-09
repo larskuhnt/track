@@ -23,6 +23,20 @@ or install it via rubygems
 
 `gem install track`
 
+## Install example application
+
+Clone the [http://github.com/larskuhnt/track-example](track-example) project:
+
+```
+git clone https://github.com/larskuhnt/track-example.git
+```
+
+or install it via the gem executable
+
+```
+track new my_track_project
+```
+
 ## Usage
 
 Subclass the `Track::Controller` class to define controllers:
