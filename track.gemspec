@@ -13,6 +13,9 @@ Gem::Specification.new do |s|
   s.summary     = "Nano framework to build small server applications based on rack and ruby 1.9"
   s.description = "Nano framework to build small server applications based on rack and ruby 1.9"
   
+  s.executables = ['track']
+  s.default_executable = 'track'
+  
   s.required_ruby_version = ">= 1.9"
   s.required_rubygems_version = ">= 1.3.6"
   
