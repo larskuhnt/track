@@ -1,0 +1,10 @@
+shared: &shared
+  framework: Track
+  domain:    localhost
+
+development:
+  <<: *shared
+    
+test:
+  <<: *shared
+  

@@ -1,0 +1,10 @@
+shared: &shared
+  adapter:  sqlite3
+  database: :memory:
+
+development:
+  <<: *shared
+    
+test:
+  <<: *shared
+  
