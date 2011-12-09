@@ -17,8 +17,9 @@ class Track < Thor
         return
       end
     end
-    $stdout << "creating new track project #{name}.\n"
-    FileUtils.cp_r(File.join(@@root, 'example'), name)
+    $stdout << "creating new track project #{name}.\n\n"
+    $stdout << `git clone git@github.com:larskuhnt/track-example.git #{name}`
+    FileUtils.rm_rf(File.join(name, '.git'))
     $stdout << "done.\n\n"
     $stdout << '########################' << "\n\n"
     $stdout << 'do the following to get up and running:' << "\n\n"
