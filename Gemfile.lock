@@ -48,3 +48,4 @@ DEPENDENCIES
   rake
   rspec
   sqlite3
+  thor

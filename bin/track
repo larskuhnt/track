@@ -1,0 +1,31 @@
+#!/usr/bin/env ruby
+require 'thor'
+
+class Track < Thor
+  
+  @@root = File.expand_path('../..', __FILE__)
+  
+  desc 'new PROJECT_NAME', 'create a new track project'
+  method_option :force, :aliases => '-f', :desc => 'delete project directory if it exists'
+  def new(name)
+    if File.exists?(name)
+      if options[:force]
+        $stdout << "Removing directory '#{name}'.\n"
+        FileUtils.rm_rf(name)
+      else
+        $stdout << "The directory '#{name}' already exists.\n"
+        return
+      end
+    end
+    $stdout << "creating new track project #{name}.\n"
+    FileUtils.cp_r(File.join(@@root, 'example'), name)
+    $stdout << "done.\n\n"
+    $stdout << '########################' << "\n\n"
+    $stdout << 'do the following to get up and running:' << "\n\n"
+    $stdout << "cd #{name}\nbundle install\nbundle exec rackup\n\n"
+    $stdout << "open your browser and go to localhost:9292\n\n"
+  end
+  
+end
+
+Track.start

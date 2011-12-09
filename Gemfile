@@ -9,4 +9,5 @@ group :development, :test do
   gem 'rake'
   gem 'activerecord'
   gem 'sqlite3'
+  gem 'thor'
 end

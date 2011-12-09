@@ -18,9 +18,9 @@ Gem::Specification.new do |s|
   
   s.add_dependency 'rack'
   s.add_development_dependency "rspec"
-  s.add_development_dependency "guard-rspec"
   s.add_development_dependency "rack-test"
-  s.add_development_dependency "rake"
+  s.add_development_dependency "active_record"
+  s.add_development_dependency "thor"
  
   s.files        = Dir.glob("lib/**/*") + %w(LICENSE README.md CHANGELOG.md ROADMAP.md)
   s.require_path = 'lib'
