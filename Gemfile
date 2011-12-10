@@ -7,7 +7,5 @@ group :development, :test do
   gem 'guard-rspec'
   gem 'rack-test'
   gem 'rake'
-  gem 'activerecord'
-  gem 'sqlite3'
   gem 'thor'
 end

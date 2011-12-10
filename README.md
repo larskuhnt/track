@@ -75,6 +75,15 @@ You can build arbitrary path match patterns by using regaular expressions.
 
 The `pre` method calls a method prior to the action. If `fail` is called in before filter method the action will not get called and the given response will be returned.
 
+## Plugins
+
+Currently available:
+
+* ActiveRecord
+* Sequel
+
+Go to the [track-plugins](http://www.github.com/larskuhnt/track-plugins) project for more details.
+
 ## Author
 
 [Lars Kuhnt](http://www.github.com/larskuhnt)
