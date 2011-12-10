@@ -1,5 +1,7 @@
 .DS_Store
 .bundle
+.rspec
+.rbenv-version
 Gemfile.lock
 build
 vendor
