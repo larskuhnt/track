@@ -11,7 +11,7 @@ Gem::Specification.new do |s|
   s.email       = ["lars.kuhnt@gmail.com"]
   s.homepage    = "http://github.com/larskuhnt/track"
   s.summary     = "Nano framework to build small server applications based on rack and ruby 1.9"
-  s.description = "Nano framework to build small server applications based on rack and ruby 1.9"
+  s.description = "Nano framework to build small and fast server applications based on rack and ruby 1.9"
   
   s.executables = ['track']
   s.default_executable = 'track'
@@ -22,8 +22,6 @@ Gem::Specification.new do |s|
   s.add_dependency 'rack'
   s.add_development_dependency "rspec"
   s.add_development_dependency "rack-test"
-  s.add_development_dependency "active_record"
-  s.add_development_dependency "thor"
  
   s.files        = Dir.glob("lib/**/*") + %w(LICENSE README.md CHANGELOG.md ROADMAP.md)
   s.require_path = 'lib'
