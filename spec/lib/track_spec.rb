@@ -34,7 +34,7 @@ describe Track do
   describe 'plugin loading' do
     
     before do
-      Track.use Track::TestPlugin
+      Track.plugin Track::TestPlugin
     end
     
     it "should TestPlugin should be booted" do

@@ -5,9 +5,8 @@ A nano framework for server applications based on rack and ruby 1.9 named captur
 ## What Track does
 
 - modularize your rack app through controllers
-- routes paths to methods inside of your controllers via the `route` method
-- define before filters via the `pre` method
-- ActiveRecord initializer through `require 'track/orm/active_record'`
+- routes paths to methods of controllers via `Track::Routes.define` in `config/routes.rb`
+- define before and after filters
 
 ## What Track does *not*
 
@@ -45,35 +44,29 @@ Subclass the `Track::Controller` class to define controllers:
 
 ```ruby
 class UsersController < Track::Controller
-
-  route '/',                      :index, :get
-  route '/show/:id',              :show,  :get
-  route '/update/(?<id> [^\/]+)', :show,  [:post, :put]
   
-  pre :find_user, :show
+  before_filter :find_user, :only => :show
   
   def index
-    [200, { "Content-Type" => 'text/plain' }, StringIO.new('hello from index')]
+    [200, { "Content-Type" => 'text/plain' }, ['hello from index']]
   end
   
   def show
-    [200, { "Content-Type" => 'text/plain' }, StringIO.new(@user.name)]
+    [200, { "Content-Type" => 'text/plain' }, [@user.name]]
   end
   
   private
   
   def find_user
     @user = User.find(params['id'])
-    fail [404, { "Content-Type" => 'text/plain' }, StringIO.new('user not found')] unless @user
+    respond [404, { "Content-Type" => 'text/plain' }, ['user not found']] unless @user
   end
 end
 ```
 
-The `route` method maps a route to an action in your controller. You can define named parameters by appending a : or by using a named capture group.
-
 You can build arbitrary path match patterns by using regaular expressions.
 
-The `pre` method calls a method prior to the action. If `fail` is called in before filter method the action will not get called and the given response will be returned.
+The `before_filter` and `after_filter` methods are similar to the ActionController filter methods. If `fail` is called in a before_filter the action will not get called and the given response will be returned.
 
 ## Plugins
 

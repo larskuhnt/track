@@ -1,25 +1,36 @@
-# encoding: utf-8
 
 module Track
-  class RouteMap < Hash
+  class RouteMap
     
-    def add(clazz, pattern, action, methods)
+    def initialize
+      @routes = []
+    end
+    
+    def add(pattern, klass, action, methods = nil)
+      raise "#{klass} is not a subclass of Track::Controller" unless klass <= Track::Controller
       methods = methods.is_a?(Array) ? methods : [methods] if methods
-      self[clazz] ||= []
-      self[clazz].push(
-        :pattern => compile_regexp(pattern),
+      regex, keys = compile_regexp(pattern)
+      @routes.push(
+        :pattern => regex,
+        :keys    => keys,
+        :class   => klass,
         :action  => action.to_sym,
         :methods => methods
       )
     end
+    alias_method :route, :add
     
-    def scan(clazz, req)
-      method = req.request_method.downcase.to_sym
-      self[clazz].each do |route|
-        md = req.path_info.match(route[:pattern])
-        return route.merge(:matches => match_hash(md)) if md && allowed_method?(route, method)
+    def scan(path, method)
+      @routes.each do |route|
+        md = path.match(route[:pattern])
+        if md && allowed_method?(route, method)
+          keys = route[:keys]
+          matches = {}
+          (1..md.size-1).each { |i| matches[keys[i-1]] = md[i] }
+          return route.merge(:matches => matches)
+        end
       end
-      false
+      nil
     end
     
     private
@@ -28,18 +39,14 @@ module Track
       route[:methods].nil? ? true : route[:methods].include?(method)
     end
     
-    def match_hash(md)
-      params = {}
-      md.names.each do |key|
-        params[key.to_s] = md[key]
-      end
-      params
-    end
-    
     def compile_regexp(pattern)
       pattern = (pattern[-1,1] == '/' ? pattern.chop : pattern) << '/?'
-      pattern.gsub!(/:([^\/]+)/i, '(?<\1> [^/]+)')
-      Regexp.new('\A'+pattern+'\z', Regexp::EXTENDED)
+      keys = []
+      pattern.gsub!(/:(\w+)/) do |m|
+        keys << $1
+        '([^\/#\?]+)'
+      end
+      [Regexp.new("^#{pattern}$"), keys]
     end
   end
 end

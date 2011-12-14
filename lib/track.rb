@@ -1,8 +1,14 @@
 require 'rack'
+require 'track/application'
+require 'track/routes'
 require 'track/controller'
 
 module Track
   
+  @@responses = {
+    :routing_error => [404, { 'Content-Type' => 'text/plain'}, ['Route not found']],
+    :not_found     => [404, { 'Content-Type' => 'text/plain'}, ['Resource not found']]
+  }
   @@env     = ENV['RACK_ENV'].to_sym.freeze
   @@config  = nil
   @@root    = nil
@@ -13,6 +19,7 @@ module Track
       @@root   = root
       @@config = load_config_file!(:config)
       boot_plugins!
+      Routes.load! File.join(root, 'config', 'routes')
     end
   
     def [](key)
@@ -39,17 +46,16 @@ module Track
       VERSION
     end
     
-    def use(plugin)
+    def plugin(plugin)
       @@plugins << plugin
     end
     
+    def responses
+      @@responses
+    end
+    
     def load_config_file!(filename)
-      begin
-        YAML.load(File.open(File.join(root, 'config', "#{filename}.yml")))[env.to_s]
-      rescue
-        raise "Config file config/config.yml is missing!" if env?(:production)
-        YAML.load(File.open(File.join(root, 'config', "#{filename}.example.yml")))[env.to_s]
-      end
+      YAML.load(File.open(File.join(root, 'config', "#{filename}.yml")))[env.to_s]
     end
     
     def boot_plugins!

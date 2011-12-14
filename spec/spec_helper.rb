@@ -5,6 +5,6 @@ $:.unshift lib unless $:.include?(lib)
 ENV['RACK_ENV'] = 'test'
 
 require 'rack/test'
-require 'track'
 
 SKELETON_ROOT = File.expand_path('../skeleton/', __FILE__)
+require File.join(SKELETON_ROOT, 'boot')
