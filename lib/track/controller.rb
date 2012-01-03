@@ -6,9 +6,10 @@ module Track
     
     @@filters = FilterMap.new
     
-    attr_reader :params
+    attr_reader :env, :params
     
-    def initialize(params)
+    def initialize(env, params)
+      @env    = env
       @params = params
     end
     

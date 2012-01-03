@@ -4,7 +4,7 @@ require 'spec_helper'
 describe  Track::Controller do
   
   before do
-    @controller = TestController.new(:test => 'test')
+    @controller = TestController.new({}, :test => 'test')
   end
   
   describe '#run_filters' do

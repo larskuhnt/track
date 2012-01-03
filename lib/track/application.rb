@@ -6,7 +6,7 @@ module Track
     def call(env)
       req = Rack::Request.new(env)
       if route = Routes.find(req.request_method, req.path_info)
-        controller = route[:class].new(req.params.merge(route[:matches]))
+        controller = route[:class].new(env, req.params.merge(route[:matches]))
         if response = controller.run_filters(:before, route[:action])
           return response
         else

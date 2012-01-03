@@ -1,19 +1,6 @@
 # encoding: utf-8
 require 'spec_helper'
 
-describe  Track::Application do
-  include Rack::Test::Methods
-  
-  def app
-    @app ||= Track::Application.new
-  end
-  
-  it "should do something" do
-    get '/?test=123'
-  end
-  
-end
-
 describe Track::Application do
   include Rack::Test::Methods
   
@@ -39,38 +26,13 @@ describe Track::Application do
       last_response.body.should == 'Route not found'
     end
   
-    it "should call set_test_param" do
-      controller = TestController.new({})
-      TestController.should_receive(:new).and_return(controller)
-      controller.should_receive(:set_test_param)
-      get '/'
-    end
-  
   end
 
   context 'GET /show' do
-  
-    it "should have the id param set to 123" do
-      controller = TestController.new('id' => '123')
-      TestController.should_receive(:new).with('id' => '123').and_return(controller)
-      get '/show/123'
-    end
-  
+    
     it "should call the show action" do
       get '/show/123'
       last_response.body.should == 'show'
-    end
-  
-    it "should include the query string params in the params hash" do
-      controller = TestController.new('id' => '123')
-      TestController.should_receive(:new).with('test' => 'test', 'id' => '123').and_return(controller)
-      get '/show/123?test=test'
-    end
-  
-    it "should include the get params in the params hash" do
-      controller = TestController.new('test' => 'test', 'id' => '123')
-      TestController.should_receive(:new).with('test' => 'test', 'id' => '123').and_return(controller)
-      get '/show/123', { 'test' => 'test' }
     end
   
     it "should return 404 if no id is given" do
@@ -134,12 +96,6 @@ describe Track::Application do
     it "should return 200 for a POST request with trailing slash" do
       post '/create/'
       last_response.status.should == 200
-    end
-  
-    it "should include the post params in the params hash" do
-      controller = TestController.new('test' => 'test')
-      TestController.should_receive(:new).with('test' => 'test').and_return(controller)
-      post '/create', { 'test' => 'test' }
     end
   
   end
